@@ -11,16 +11,21 @@ public class jdbc {
         String password = "Harshith@25*";
 
         try {
+            Class.forName("org.postgresql.Driver");
 
             Connection conn = DriverManager.getConnection(url, user, password);
             System.out.println("Connected to PostgreSQL!");
 
             Statement stmt = conn.createStatement();
 
-            String query = "INSERT INTO student VALUES (2,'Harshith',95)";
-            stmt.executeUpdate(query);
+            String query = "INSERT INTO student VALUES (2,'Harshith',95) ON CONFLICT (sid) DO NOTHING";
+            int rowsAffected = stmt.executeUpdate(query);
 
-            System.out.println("Data inserted successfully!");
+            if (rowsAffected > 0) {
+                System.out.println("Data inserted successfully!");
+            } else {
+                System.out.println("Data already exists. No new row inserted.");
+            }
 
             conn.close();
 
